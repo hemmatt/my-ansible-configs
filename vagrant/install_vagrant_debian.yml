@@ -1,0 +1,26 @@
+---
+
+- name: Install vagrant
+  hosts: localhost
+  become: true
+  tasks:
+
+  - name: Install requirement packages
+    apt:
+      name:
+      - wget
+      - gnupg
+      state: latest
+      update_cache: yes
+
+  - name: Add Vagrant’s official GPG key
+    shell: wget -O- https://apt.releases.hashicorp.com/gpg | gpg --batch --yes --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+  - name: Set up the repository
+    shell: echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
+
+  - name: Update the package index and install Vagrant
+    apt:
+      name: vagrant
+      state: latest
+      update_cache: yes
