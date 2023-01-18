@@ -1,0 +1,26 @@
+---
+
+- name: Install Virtualbox
+  hosts: localhost
+  become: true
+  tasks:
+
+  - name: Install requirement packages
+    apt:
+      name:
+      - gnupg
+      - wget
+      state: latest
+      update_cache: yes
+
+  - name: Add Virtualbox official GPG key
+    shell: wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | gpg --batch --yes --dearmor -o /usr/share/keyrings/oracle-virtualbox-2016.gpg
+
+  - name: Set up the repository
+    shell: echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" | tee /etc/apt/sources.list.d/virtualbox.list
+
+  - name: Update the package index and install Virtualbox
+    apt:
+      name: virtualbox-6.1
+      state: latest
+      update_cache: yes
