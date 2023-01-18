@@ -30,3 +30,15 @@
       - containerd.io
       - docker-compose-plugin
       update_cache: yes
+
+  - name: make sure docker is enable and started
+    service:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Add user to docker group
+    user:
+      name: hemmat
+      groups: docker
+      append: yes
